@@ -14,20 +14,19 @@ class Transaction {
     required this.transactionType,
   });
 
-  static Map<String, Transaction> convertDataToTransactionsList(data){
+  static Map<String, Transaction> convertDataToTransactionsList(data) {
     Map<String, Transaction> transactionsList = {};
-    for(var d in data){
-      if(d["userId"] == UserModel.uid) {
+    for (var d in data) {
+      if (d["userId"].toString() == UserModel.uid) {
         Transaction transaction = Transaction(
-            transactionID: d["transactionID"].toString(),
+            transactionID: d["id"].toString(),
             transactionCoins: d["amount"].toString(),
             transactionDate: d["transactionDate"].toString(),
             description: d["description"].toString(),
             transactionType: d["transactionType"].toString());
-        transactionsList[d["transactionID"].toString()] = transaction;
+        transactionsList[d["id"].toString()] = transaction;
       }
     }
     return transactionsList;
   }
-
 }

@@ -169,42 +169,45 @@ class _StudentHomeState extends State<StudentHome> {
                         return const Center(
                           child: Text("error loading"),
                         );
-                      } else if (transactionsSnapshot.hasData) {}
-                      List<Transaction> transactions = transactionsSnapshot.data!;
+                      } else if (transactionsSnapshot.hasData) {
+                        List<Transaction> transactions =
+                            transactionsSnapshot.data!;
 
-                      return transactions.isNotEmpty
-                          ? SizedBox(
-                              height: 500,
-                              width: 600,
-                              child: ListView.builder(
-                                physics:
-                                    const AlwaysScrollableScrollPhysics(), // enable scrolling even if content is smaller than available space
-                                itemCount: transactions.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  Transaction transactionData =
-                                      transactions[index];
-                                  return TransactionContainer(
-                                    width: 900,
-                                    height: 180,
-                                    transactionTitle:
-                                        transactionData.transactionID,
-                                    transactionCoins:
-                                        transactionData.transactionCoins,
-                                    transactionDate:
-                                        transactionData.transactionDate,
-                                    transactionDescription:
-                                        transactionData.description,
-                                    transactionType:
-                                        transactionData.transactionType,
-                                  );
-                                },
-                              ),
-                            )
-                          : const Center(
-                              child: Text(
-                              "No transactions Made",
-                              style: TextStyle(color: Colors.grey),
-                            ));
+                        return transactions.isNotEmpty
+                            ? SizedBox(
+                                height: 500,
+                                width: 600,
+                                child: ListView.builder(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(), // enable scrolling even if content is smaller than available space
+                                  itemCount: transactions.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Transaction transactionData =
+                                        transactions[index];
+                                    return TransactionContainer(
+                                      width: 900,
+                                      height: 180,
+                                      transactionTitle:
+                                          transactionData.transactionID,
+                                      transactionCoins:
+                                          transactionData.transactionCoins,
+                                      transactionDate:
+                                          transactionData.transactionDate,
+                                      transactionDescription:
+                                          transactionData.description,
+                                      transactionType:
+                                          transactionData.transactionType,
+                                    );
+                                  },
+                                ),
+                              )
+                            : const Center(
+                                child: Text(
+                                "No transactions Made",
+                                style: TextStyle(color: Colors.grey),
+                              ));
+                      }
                     }
                     return const Center(
                       child: CircularProgressIndicator(),

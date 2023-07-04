@@ -6,20 +6,18 @@ import 'package:software_arch_project/models/user.dart';
 import '../models/transaction.dart';
 
 class VirtualCoinsViewModel extends ChangeNotifier {
-
   Future<String> getCoinsBalance() async {
-    try{
-      final http.Response response = await http.get(
-          Uri.parse('http://localhost:8080/coins/${UserModel.uid}'));
+    try {
+      final http.Response response = await http
+          .get(Uri.parse('http://localhost:8080/coins/${UserModel.uid}'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        return data["balanceAvailable"].toString();
+        return data.toString();
       } else {
         return "";
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
       return "";
     }
@@ -31,9 +29,10 @@ class VirtualCoinsViewModel extends ChangeNotifier {
   }
 
   Future<List<Transaction>> getCoinsTransactions() async {
-    try{
+    try {
       final http.Response response = await http.get(
           Uri.parse('http://localhost:8080/transactions/${UserModel.uid}'));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
@@ -43,8 +42,7 @@ class VirtualCoinsViewModel extends ChangeNotifier {
       } else {
         return [];
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
       return [];
     }
