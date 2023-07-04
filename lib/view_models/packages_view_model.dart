@@ -4,44 +4,46 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/package.dart';
 
-class PackagesViewModel extends ChangeNotifier{
+class PackagesViewModel extends ChangeNotifier {
   Package? packageToUpdate;
 
-  setPackageDataToUpdate(String packageID, String packagePrice, String coinsOffered, String dateCreated){
-    packageToUpdate = Package(packageID: packageID, packageDescription: packagePrice, coinsOffered: coinsOffered, packageName: dateCreated);
+  setPackageDataToUpdate(String packageID, String packagePrice,
+      String coinsOffered, String dateCreated) {
+    packageToUpdate = Package(
+        packageID: packageID,
+        packageDescription: packagePrice,
+        coinsOffered: coinsOffered,
+        packageName: dateCreated);
     notifyListeners();
   }
 
   Future<List<Package>> getAllPackages() async {
-   // return [Package(packageID: "2", packageDescription: "desc", coinsOffered: "30", packageName: "package 1")];
-    try{
-      final http.Response response = await http.get(
-          Uri.parse('http://localhost:8080/package/all'));
+    // return [Package(packageID: "2", packageDescription: "desc", coinsOffered: "30", packageName: "package 1")];
+    try {
+      final http.Response response =
+          await http.get(Uri.parse('http://localhost:8080/package/all'));
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         Map<String, Package> packagesMap =
-        Package.convertDataToPackagesList(data);
+            Package.convertDataToPackagesList(data);
+
         return packagesMap.values.toList(growable: false);
       } else {
         return [];
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
       return [];
     }
-
   }
 
-
-  purchasePackage(){
-
-  }
+  purchasePackage() {}
 
   deletePackage(String packageId) async {
     print(packageId);
-    try{
+    try {
       final response = await http.delete(
           Uri.parse('http://localhost:8080/package/delete/${packageId}'));
       if (response.statusCode == 200) {
@@ -49,24 +51,28 @@ class PackagesViewModel extends ChangeNotifier{
       } else {
         print('Failed to delete data: ${response.statusCode}');
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
     notifyListeners();
   }
 
-  clearPackageToUpdateData(){
+  clearPackageToUpdateData() {
     packageToUpdate = null;
   }
 
-  savePackage(String packageDescription, String coinsOffered, String packageName, String packageID) async {
-    Package packageData = Package(packageID: packageID, packageDescription: packageDescription, coinsOffered: coinsOffered, packageName: packageName);
-    if(packageToUpdate!=null && packageID==""){
+  savePackage(String packageDescription, String coinsOffered,
+      String packageName, String packageID) async {
+    Package packageData = Package(
+        packageID: packageID,
+        packageDescription: packageDescription,
+        coinsOffered: coinsOffered,
+        packageName: packageName);
+
+    if (packageToUpdate != null && packageID == "") {
       // package is created new
       await createPackage(packageData);
-    }
-    else{
+    } else {
       // package is updated
       await updatePackage(packageData);
     }
@@ -75,7 +81,6 @@ class PackagesViewModel extends ChangeNotifier{
   }
 
   updatePackage(Package updatedPackage) async {
-
     final data = {
       "id": updatedPackage.packageID,
       "name": updatedPackage.packageName,
@@ -83,7 +88,7 @@ class PackagesViewModel extends ChangeNotifier{
       "coins": updatedPackage.coinsOffered,
     };
 
-    try{
+    try {
       final response = await http.post(
         Uri.parse('http://localhost:8080/package/edit'),
         headers: {
@@ -97,8 +102,7 @@ class PackagesViewModel extends ChangeNotifier{
       } else {
         print('Failed to update data: ${response.statusCode}');
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
   }
@@ -110,7 +114,7 @@ class PackagesViewModel extends ChangeNotifier{
       "coins": updatedPackage.coinsOffered,
     };
 
-    try{
+    try {
       final response = await http.post(
         Uri.parse('http://localhost:8080/package/add'),
         headers: {
@@ -120,14 +124,12 @@ class PackagesViewModel extends ChangeNotifier{
       );
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print('Data updated successfully: $responseData');
+        print('Data created successfully: $responseData');
       } else {
         print('Failed to update data: ${response.statusCode}');
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
   }
-
 }

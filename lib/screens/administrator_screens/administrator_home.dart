@@ -74,31 +74,31 @@ class _AdminHomeState extends State<AdminHome> {
                   } else if (packagesSnapshot.hasData) {
                     List<Package> packages = packagesSnapshot.data!;
 
-                    return packages.isNotEmpty?
-                    SizedBox(
-                      height: 600,
-                      width: 600,
-                      child: ListView.builder(
-                        itemCount: packages.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          Package packageData = packages[index];
-                          return PackageContainer(
-                            width: 430,
-                            height: 150,
-                            packageID: packageData.packageID,
-                            //packageIndex: index,
-                            packageDescription: packageData.packageDescription,
-                            coinsOffered: packageData.coinsOffered,
-                            packageName: packageData.packageName,
-                          );
-                        },
-                      ),
-                    ):
-                    const Center(
-                        child: Text(
-                          "No Packages Created",
-                          style: TextStyle(color: Colors.grey),
-                        ));
+                    return packages.isNotEmpty
+                        ? SizedBox(
+                            height: 600,
+                            width: 600,
+                            child: ListView.builder(
+                              itemCount: packages.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                Package packageData = packages[index];
+                                return PackageContainer(
+                                  width: 430,
+                                  height: 150,
+                                  packageID: packageData.packageID,
+                                  //packageIndex: index,
+                                  packageDescription: packageData.packageDescription,
+                                  coinsOffered: packageData.coinsOffered,
+                                  packageName: packageData.packageName,
+                                );
+                              },
+                            ),
+                          )
+                        : const Center(
+                            child: Text(
+                            "No Packages Created",
+                            style: TextStyle(color: Colors.grey),
+                          ));
                   }
                 }
                 return const Center(
@@ -137,7 +137,8 @@ class _AdminHomeState extends State<AdminHome> {
             )),
         Consumer<PackagesViewModel>(builder: (context, packagesVM, child) {
           if (packagesVM.packageToUpdate != null) {
-            packageDescription.text = packagesVM.packageToUpdate!.packageDescription;
+            packageDescription.text =
+                packagesVM.packageToUpdate!.packageDescription;
             coinsOffered.text = packagesVM.packageToUpdate!.coinsOffered;
             packageName.text = packagesVM.packageToUpdate!.packageName;
             packageID = packagesVM.packageToUpdate!.packageID;
@@ -172,7 +173,8 @@ class _AdminHomeState extends State<AdminHome> {
                     ),
                     dataField("Package Name", packageName, width: 948),
                     dataField("Coins Offered", coinsOffered, width: 955),
-                    dataField("Package Description", packageDescription, width:910),
+                    dataField("Package Description", packageDescription,
+                        width: 910),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -187,8 +189,18 @@ class _AdminHomeState extends State<AdminHome> {
                             bgColor: buttonPurple,
                             text: 'Save',
                             onPressed: () async {
-                              await packagesVM.savePackage(packageDescription.text,
-                                  coinsOffered.text, packageName.text, packageID);
+                              Provider.of<PackagesViewModel>(context,
+                                      listen: false)
+                                  .setPackageDataToUpdate(
+                                      "",
+                                      packageDescription.text,
+                                      coinsOffered.text,
+                                      packageName.text);
+                              await packagesVM.savePackage(
+                                  packageDescription.text,
+                                  coinsOffered.text,
+                                  packageName.text,
+                                  packageID);
                               Provider.of<AdministratorPageViewModel>(context,
                                       listen: false)
                                   .changeSectionToViewPackages();
@@ -196,7 +208,6 @@ class _AdminHomeState extends State<AdminHome> {
                               coinsOffered.text = "";
                               packageName.text = "";
                               packageID = "";
-
                             },
                           ),
                         ),
@@ -210,9 +221,10 @@ class _AdminHomeState extends State<AdminHome> {
     );
   }
 
-  Widget dataField(String text, TextEditingController controller, {double width = 300, double height = 50}) {
+  Widget dataField(String text, TextEditingController controller,
+      {double width = 300, double height = 50}) {
     return Padding(
-      padding: const EdgeInsets.only(top:8.0, bottom:8, left:8),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8, left: 8),
       child: Row(
         children: [
           Text(
