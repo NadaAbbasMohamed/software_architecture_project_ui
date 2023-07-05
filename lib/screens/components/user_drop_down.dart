@@ -45,17 +45,6 @@ void showPopupDialog(BuildContext context) {
                   Navigator.of(context).pop();
 
                 }),
-            SizedBox(width: 15,),
-            DefaultButton(
-                text: "Tutor",
-                //width: 80,
-                //height: 30,
-                //fontSize: tinyTextSize,
-                onPressed: () {
-                  Provider.of<UsersViewModel>(context, listen: false).changeUserToTutor();
-                  Navigator.of(context).pop();
-
-                }),
               SizedBox(width: 15,),
             DefaultButton(
                 text: "Administrator",
